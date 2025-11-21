@@ -5,30 +5,135 @@ using System.Linq;
 using System.Windows.Forms;
 using BlueberryPizzeria.Models;
 
+namespace BlueberryPizzeria.Models
+{
+
+    public class EmployeeData
+    {
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public string Role { get; private set; }
+
+        public bool ClockedIn { get; private set; }
+
+        public string ClockInTime { get; private set; }
+
+        public int OrdersProcessed { get; private set; }
+        public double TotalSales { get; private set; }
+
+        public string Status { get; private set; }
+
+        public string StatusLabel
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case "active":
+                        return "CLOCKED IN";
+                    case "not_clocked_in":
+                        return "NOT CLOCKED IN";
+                    case "on_break":
+                        return "ON BREAK";
+                    default:
+                        return (Status ?? "unknown").ToUpperInvariant();
+                }
+            }
+        }
+
+        public Color StatusColor
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case "active":
+                        return Color.FromArgb(22, 163, 74);     // green
+                    case "not_clocked_in":
+                        return Color.FromArgb(220, 38, 38);     // red
+                    case "on_break":
+                        return Color.FromArgb(234, 179, 8);     // yellow
+                    default:
+                        return Color.FromArgb(107, 114, 128);   // gray
+                }
+            }
+        }
+
+        public EmployeeData(
+            int id,
+            string name,
+            string role,
+            bool clockedIn,
+            string clockInTime,
+            int ordersProcessed,
+            double totalSales,
+            string status)
+        {
+            Id = id;
+            Name = name;
+            Role = role;
+            ClockedIn = clockedIn;
+            ClockInTime = clockInTime;
+            OrdersProcessed = ordersProcessed;
+            TotalSales = totalSales;
+            Status = status;
+        }
+    }
+
+    public class OrderData
+    {
+        public int OrderNumber { get; private set; }
+        public string Customer { get; private set; }
+        public string Phone { get; private set; }
+        public string Time { get; private set; }
+
+        public string Status { get; private set; }
+
+        public string Type { get; private set; }
+
+        public string Cashier { get; private set; }
+        public int ItemCount { get; private set; }
+        public double Total { get; private set; }
+
+        public OrderData(
+            int orderNumber,
+            string customer,
+            string phone,
+            string time,
+            string status,
+            string type,
+            string cashier,
+            int itemCount,
+            double total)
+        {
+            OrderNumber = orderNumber;
+            Customer = customer;
+            Phone = phone;
+            Time = time;
+            Status = status;
+            Type = type;
+            Cashier = cashier;
+            ItemCount = itemCount;
+            Total = total;
+        }
+    }
+}
+
 namespace BlueberryPizzeria
 {
-    /// <summary>
-    /// Manager dashboard for viewing sales, orders, and employee status
-    /// Provides comprehensive overview of restaurant operations
-    /// </summary>
+
     public class ManagerDashboardForm : Form
     {
         private List<EmployeeData> employees = new List<EmployeeData>();
         private List<OrderData> orders = new List<OrderData>();
         private Panel mainContentPanel;
 
-        /// <summary>
-        /// Initializes a new instance of the ManagerDashboardForm
-        /// </summary>
         public ManagerDashboardForm()
         {
             LoadSampleData();
             InitializeComponents();
         }
 
-        /// <summary>
-        /// Initializes all UI components
-        /// </summary>
         private void InitializeComponents()
         {
             // Form properties
@@ -56,9 +161,7 @@ namespace BlueberryPizzeria
             this.Controls.Add(scrollContainer);
         }
 
-        /// <summary>
-        /// Creates the header panel
-        /// </summary>
+
         private Panel CreateHeaderPanel()
         {
             Panel panel = new Panel
@@ -115,9 +218,7 @@ namespace BlueberryPizzeria
             return panel;
         }
 
-        /// <summary>
-        /// Creates the main content panel with all dashboard sections
-        /// </summary>
+ 
         private Panel CreateMainContent()
         {
             Panel panel = new Panel
@@ -195,9 +296,7 @@ namespace BlueberryPizzeria
             return panel;
         }
 
-        /// <summary>
-        /// Creates the key metrics panel
-        /// </summary>
+
         private Panel CreateMetricsPanel()
         {
             Panel panel = new Panel
@@ -222,9 +321,7 @@ namespace BlueberryPizzeria
             return panel;
         }
 
-        /// <summary>
-        /// Creates a metric card
-        /// </summary>
+      
         private Panel CreateMetricCard(string title, string value, string emoji, Color color, int xPos)
         {
             Panel card = new Panel
@@ -271,9 +368,6 @@ namespace BlueberryPizzeria
             return card;
         }
 
-        /// <summary>
-        /// Creates the order status panel
-        /// </summary>
         private Panel CreateOrderStatusPanel()
         {
             Panel panel = CreateSectionPanel("Current Orders Status", 880, 180);
@@ -293,9 +387,6 @@ namespace BlueberryPizzeria
             return panel;
         }
 
-        /// <summary>
-        /// Creates a status card
-        /// </summary>
         private Panel CreateStatusCard(string label, string count, Color color, int xPos, int yPos)
         {
             Panel card = new Panel
@@ -333,9 +424,6 @@ namespace BlueberryPizzeria
             return card;
         }
 
-        /// <summary>
-        /// Creates sales by type panel
-        /// </summary>
         private Panel CreateSalesByTypePanel()
         {
             Panel panel = CreateSectionPanel("Sales by Order Type", 880, 260);
@@ -360,9 +448,6 @@ namespace BlueberryPizzeria
             return panel;
         }
 
-        /// <summary>
-        /// Creates a sales type row
-        /// </summary>
         private Panel CreateSalesTypeRow(string type, int count, double sales, Color color, int xPos, int yPos)
         {
             Panel row = new Panel
@@ -373,7 +458,6 @@ namespace BlueberryPizzeria
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            // Color bar
             Panel colorBar = new Panel
             {
                 Location = new Point(0, 0),
@@ -392,7 +476,7 @@ namespace BlueberryPizzeria
 
             Label countLabel = new Label
             {
-                Text = $"{count} orders",
+                Text = string.Format("{0} orders", count),
                 Font = new Font("Arial", 11),
                 ForeColor = Color.FromArgb(107, 114, 128),
                 Location = new Point(20, 35),
@@ -402,7 +486,7 @@ namespace BlueberryPizzeria
 
             Label salesLabel = new Label
             {
-                Text = $"${sales:F2}",
+                Text = string.Format("${0:F2}", sales),
                 Font = new Font("Arial", 20, FontStyle.Bold),
                 ForeColor = color,
                 Location = new Point(640, 15),
@@ -416,9 +500,7 @@ namespace BlueberryPizzeria
             return row;
         }
 
-        /// <summary>
-        /// Creates recent orders panel
-        /// </summary>
+
         private Panel CreateRecentOrdersPanel()
         {
             Panel panel = CreateSectionPanel("Recent Orders", 880, 400);
@@ -432,7 +514,7 @@ namespace BlueberryPizzeria
             };
 
             int yPos = 10;
-            foreach (var order in orders.Take(5))
+            foreach (OrderData order in orders.Take(5))
             {
                 ordersContainer.Controls.Add(CreateOrderRow(order, yPos));
                 yPos += 80;
@@ -443,9 +525,8 @@ namespace BlueberryPizzeria
             return panel;
         }
 
-        /// <summary>
-        /// Creates an order row
-        /// </summary>
+   
+
         private Panel CreateOrderRow(OrderData order, int yPos)
         {
             Panel row = new Panel
@@ -458,7 +539,7 @@ namespace BlueberryPizzeria
 
             Label orderNumLabel = new Label
             {
-                Text = $"#{order.OrderNumber}",
+                Text = string.Format("#{0}", order.OrderNumber),
                 Font = new Font("Arial", 14, FontStyle.Bold),
                 Location = new Point(15, 10),
                 Size = new Size(100, 25),
@@ -467,7 +548,7 @@ namespace BlueberryPizzeria
 
             Label statusLabel = new Label
             {
-                Text = order.Status.ToUpper(),
+                Text = (order.Status ?? "").ToUpperInvariant(),
                 Font = new Font("Arial", 9, FontStyle.Bold),
                 ForeColor = Color.White,
                 BackColor = GetStatusColor(order.Status),
@@ -478,7 +559,7 @@ namespace BlueberryPizzeria
 
             Label customerLabel = new Label
             {
-                Text = $"{order.Customer} • {order.Type} • {order.Time}",
+                Text = string.Format("{0} • {1} • {2}", order.Customer, order.Type, order.Time),
                 Font = new Font("Arial", 10),
                 ForeColor = Color.FromArgb(107, 114, 128),
                 Location = new Point(15, 40),
@@ -488,7 +569,7 @@ namespace BlueberryPizzeria
 
             Label totalLabel = new Label
             {
-                Text = $"${order.Total:F2}",
+                Text = string.Format("${0:F2}", order.Total),
                 Font = new Font("Arial", 16, FontStyle.Bold),
                 ForeColor = Color.FromArgb(22, 163, 74),
                 Location = new Point(720, 15),
@@ -499,7 +580,7 @@ namespace BlueberryPizzeria
 
             Label itemsLabel = new Label
             {
-                Text = $"{order.ItemCount} items",
+                Text = string.Format("{0} items", order.ItemCount),
                 Font = new Font("Arial", 10),
                 ForeColor = Color.FromArgb(107, 114, 128),
                 Location = new Point(720, 42),
@@ -513,9 +594,6 @@ namespace BlueberryPizzeria
             return row;
         }
 
-        /// <summary>
-        /// Creates staff status panel
-        /// </summary>
         private Panel CreateStaffStatusPanel()
         {
             Panel panel = CreateSectionPanel("Staff Status", 400, 340);
@@ -536,9 +614,7 @@ namespace BlueberryPizzeria
             return panel;
         }
 
-        /// <summary>
-        /// Creates a staff status card
-        /// </summary>
+
         private Panel CreateStaffCard(string label, string count, string icon, Color color, int yPos)
         {
             Panel card = new Panel
@@ -585,9 +661,7 @@ namespace BlueberryPizzeria
             return card;
         }
 
-        /// <summary>
-        /// Creates employee list panel
-        /// </summary>
+ 
         private Panel CreateEmployeeListPanel()
         {
             Panel panel = CreateSectionPanel("All Employees", 400, 480);
@@ -601,7 +675,7 @@ namespace BlueberryPizzeria
             };
 
             int yPos = 10;
-            foreach (var emp in employees)
+            foreach (EmployeeData emp in employees)
             {
                 empContainer.Controls.Add(CreateEmployeeRow(emp, yPos));
                 yPos += 85;
@@ -612,9 +686,6 @@ namespace BlueberryPizzeria
             return panel;
         }
 
-        /// <summary>
-        /// Creates an employee row
-        /// </summary>
         private Panel CreateEmployeeRow(EmployeeData emp, int yPos)
         {
             Panel row = new Panel
@@ -655,11 +726,13 @@ namespace BlueberryPizzeria
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
+            row.Controls.AddRange(new Control[] { nameLabel, roleLabel, statusLabel });
+
             if (emp.ClockedIn)
             {
                 Label ordersLabel = new Label
                 {
-                    Text = $"{emp.OrdersProcessed} orders",
+                    Text = string.Format("{0} orders", emp.OrdersProcessed),
                     Font = new Font("Arial", 10),
                     ForeColor = Color.FromArgb(107, 114, 128),
                     Location = new Point(250, 10),
@@ -670,7 +743,7 @@ namespace BlueberryPizzeria
 
                 Label salesLabel = new Label
                 {
-                    Text = $"${emp.TotalSales:F2}",
+                    Text = string.Format("${0:F2}", emp.TotalSales),
                     Font = new Font("Arial", 12, FontStyle.Bold),
                     ForeColor = Color.FromArgb(22, 163, 74),
                     Location = new Point(250, 32),
@@ -682,19 +755,15 @@ namespace BlueberryPizzeria
                 row.Controls.AddRange(new Control[] { ordersLabel, salesLabel });
             }
 
-            row.Controls.AddRange(new Control[] { nameLabel, roleLabel, statusLabel });
-
             return row;
         }
 
-        /// <summary>
-        /// Creates top performers panel
-        /// </summary>
+ 
         private Panel CreateTopPerformersPanel()
         {
             Panel panel = CreateSectionPanel("Top Performers", 400, 280);
 
-            var topPerformers = employees
+            List<EmployeeData> topPerformers = employees
                 .Where(e => e.ClockedIn && e.Role == "Cashier")
                 .OrderByDescending(e => e.TotalSales)
                 .Take(3)
@@ -702,7 +771,7 @@ namespace BlueberryPizzeria
 
             int yPos = 70;
             int rank = 1;
-            foreach (var emp in topPerformers)
+            foreach (EmployeeData emp in topPerformers)
             {
                 panel.Controls.Add(CreatePerformerRow(emp, rank++, yPos));
                 yPos += 65;
@@ -711,9 +780,6 @@ namespace BlueberryPizzeria
             return panel;
         }
 
-        /// <summary>
-        /// Creates a performer row
-        /// </summary>
         private Panel CreatePerformerRow(EmployeeData emp, int rank, int yPos)
         {
             Panel row = new Panel
@@ -746,7 +812,7 @@ namespace BlueberryPizzeria
 
             Label ordersLabel = new Label
             {
-                Text = $"{emp.OrdersProcessed} orders",
+                Text = string.Format("{0} orders", emp.OrdersProcessed),
                 Font = new Font("Arial", 10),
                 ForeColor = Color.FromArgb(107, 114, 128),
                 Location = new Point(52, 32),
@@ -756,7 +822,7 @@ namespace BlueberryPizzeria
 
             Label salesLabel = new Label
             {
-                Text = $"${emp.TotalSales:F2}",
+                Text = string.Format("${0:F2}", emp.TotalSales),
                 Font = new Font("Arial", 14, FontStyle.Bold),
                 ForeColor = Color.FromArgb(22, 163, 74),
                 Location = new Point(250, 17),
@@ -770,9 +836,7 @@ namespace BlueberryPizzeria
             return row;
         }
 
-        /// <summary>
-        /// Creates a section panel with title
-        /// </summary>
+
         private Panel CreateSectionPanel(string title, int width, int height)
         {
             Panel panel = new Panel
@@ -804,19 +868,22 @@ namespace BlueberryPizzeria
             return panel;
         }
 
-        /// <summary>
-        /// Gets color for order status
-        /// </summary>
+   
         private Color GetStatusColor(string status)
         {
-            return status switch
+            switch (status)
             {
-                "new" => Color.FromArgb(37, 99, 235),
-                "preparing" => Color.FromArgb(234, 179, 8),
-                "ready" => Color.FromArgb(22, 163, 74),
-                "completed" => Color.FromArgb(107, 114, 128),
-                _ => Color.FromArgb(156, 163, 175)
-            };
+                case "new":
+                    return Color.FromArgb(37, 99, 235);      // blue
+                case "preparing":
+                    return Color.FromArgb(234, 179, 8);      // yellow
+                case "ready":
+                    return Color.FromArgb(22, 163, 74);      // green
+                case "completed":
+                    return Color.FromArgb(107, 114, 128);    // gray
+                default:
+                    return Color.FromArgb(156, 163, 175);    // light gray
+            }
         }
 
         /// <summary>
@@ -841,3 +908,6 @@ namespace BlueberryPizzeria
             orders.Add(new OrderData(999, "Tom Brown", "555-0222", "1:30 PM", "completed", "Dine-in", "Sarah Davis", 2, 14.58));
             orders.Add(new OrderData(998, "Robert Lee", "555-0333", "1:15 PM", "completed", "Pickup", "Sarah Davis", 1, 9.18));
             orders.Add(new OrderData(997, "Nancy Green", "555-0444", "12:45 PM", "completed", "Delivery", "Mike Johnson", 3, 24.93));
+        }
+    }
+}

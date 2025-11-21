@@ -335,28 +335,34 @@ namespace BlueberryPizzeria
         /// </summary>
         private Color GetStatusColor(string status)
         {
-            return status switch
+            switch (status)
             {
-                "new" => Color.FromArgb(37, 99, 235), // Blue-600
-                "preparing" => Color.FromArgb(234, 179, 8), // Yellow-500
-                "ready" => Color.FromArgb(22, 163, 74), // Green-600
-                _ => Color.FromArgb(156, 163, 175)
-            };
+                case "new":
+                    return Color.FromArgb(37, 99, 235);   // Blue-600
+                case "preparing":
+                    return Color.FromArgb(234, 179, 8);   // Yellow-500
+                case "ready":
+                    return Color.FromArgb(22, 163, 74);   // Green-600
+                default:
+                    return Color.FromArgb(156, 163, 175);
+            }
         }
 
-        /// <summary>
-        /// Gets border color for order status
-        /// </summary>
         private Color GetStatusBorderColor(string status)
         {
-            return status switch
+            switch (status)
             {
-                "new" => Color.FromArgb(29, 78, 216), // Blue-700
-                "preparing" => Color.FromArgb(202, 138, 4), // Yellow-600
-                "ready" => Color.FromArgb(21, 128, 61), // Green-700
-                _ => Color.FromArgb(107, 114, 128)
-            };
+                case "new":
+                    return Color.FromArgb(29, 78, 216);   // Blue-700
+                case "preparing":
+                    return Color.FromArgb(202, 138, 4);   // Yellow-600
+                case "ready":
+                    return Color.FromArgb(21, 128, 61);   // Green-700
+                default:
+                    return Color.FromArgb(107, 114, 128);
+            }
         }
+
 
         /// <summary>
         /// Gets text color for order status

@@ -15,7 +15,6 @@ namespace BlueberryPizzeria
     {
         private Panel menuPanel;
         private Panel cartPanel;
-        private RichTextBox cartTextBox;
         private Label subtotalLabel;
         private Label taxLabel;
         private Label totalLabel;
@@ -106,8 +105,11 @@ namespace BlueberryPizzeria
             // Header buttons
             Button kitchenButton = CreateHeaderButton("Kitchen View", new Point(900, 20));
             Button customerButton = CreateHeaderButton("Find Customer", new Point(1020, 20));
-
-            kitchenButton.Click += (s, e) => MessageBox.Show("Kitchen Display - To be implemented", "Info");
+            
+            kitchenButton.Click += (s, e) => {
+                KitchenDisplayForm kitchenForm = new KitchenDisplayForm();
+                kitchenForm.Show();
+            };
             customerButton.Click += (s, e) => MessageBox.Show("Customer Search - To be implemented", "Info");
 
             panel.Controls.AddRange(new Control[] { titleLabel, subtitleLabel, kitchenButton, customerButton });
@@ -210,112 +212,6 @@ namespace BlueberryPizzeria
                 BackColor = Color.White
             };
 
-            // Header
-            Panel headerPanel = new Panel
-            {
-                Location = new Point(0, 0),
-                Size = new Size(400, 60),
-                BackColor = Color.FromArgb(31, 41, 55) // Gray-800
-            };
-
-            Label cartLabel = new Label
-            {
-                Text = "🛒 Current Order",
-                Font = new Font("Arial", 18, FontStyle.Bold),
-                ForeColor = Color.White,
-                Location = new Point(15, 17),
-                Size = new Size(370, 28),
-                BackColor = Color.Transparent
-            };
-
-            headerPanel.Controls.Add(cartLabel);
-
-            // Cart items area
-            cartTextBox = new RichTextBox
-            {
-                Location = new Point(10, 70),
-                Size = new Size(380, 380),
-                Font = new Font("Consolas", 10),
-                ReadOnly = true,
-                BackColor = Color.White,
-                BorderStyle = BorderStyle.None,
-                Padding = new Padding(5)
-            };
-
-            // Totals panel
-            Panel totalsPanel = new Panel
-            {
-                Location = new Point(0, 460),
-                Size = new Size(400, 140),
-                BackColor = Color.FromArgb(249, 250, 251)
-            };
-
-            // Separator line
-            Panel separatorLine = new Panel
-            {
-                Location = new Point(20, 0),
-                Size = new Size(360, 2),
-                BackColor = Color.FromArgb(229, 231, 235)
-            };
-            totalsPanel.Controls.Add(separatorLine);
-
-            subtotalLabel = new Label
-            {
-                Text = "Subtotal: $0.00",
-                Font = new Font("Arial", 14),
-                Location = new Point(20, 20),
-                Size = new Size(360, 28),
-                BackColor = Color.Transparent
-            };
-
-            taxLabel = new Label
-            {
-                Text = "Tax (8%): $0.00",
-                Font = new Font("Arial", 14),
-                Location = new Point(20, 50),
-                Size = new Size(360, 28),
-                BackColor = Color.Transparent
-            };
-
-            // Second separator
-            Panel separator2 = new Panel
-            {
-                Location = new Point(20, 80),
-                Size = new Size(360, 2),
-                BackColor = Color.FromArgb(229, 231, 235)
-            };
-            totalsPanel.Controls.Add(separator2);
-
-            totalLabel = new Label
-            {
-                Text = "Total: $0.00",
-                Font = new Font("Arial", 22, FontStyle.Bold),
-                ForeColor = Color.FromArgb(185, 28, 28),
-                Location = new Point(20, 90),
-                Size = new Size(360, 38),
-                BackColor = Color.Transparent
-            };
-
-            totalsPanel.Controls.AddRange(new Control[] { subtotalLabel, taxLabel, totalLabel });
-
-            // Checkout button
-            checkoutButton = new Button
-            {
-                Text = "Proceed to Payment",
-                Font = new Font("Arial", 16, FontStyle.Bold),
-                Location = new Point(0, 600),
-                Size = new Size(400, 60),
-                BackColor = Color.FromArgb(22, 163, 74), // Green-600
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Enabled = false
-            };
-            checkoutButton.FlatAppearance.BorderSize = 0;
-            checkoutButton.Click += CheckoutButton_Click;
-
-            panel.Controls.AddRange(new Control[] { headerPanel, cartTextBox, totalsPanel, checkoutButton });
-
             return panel;
         }
 
@@ -325,7 +221,7 @@ namespace BlueberryPizzeria
         private void SwitchCategory(string category)
         {
             currentCategory = category;
-
+            
             // Update tab button colors
             Panel tabPanel = (Panel)menuPanel.Parent.Controls[0];
             foreach (Control control in tabPanel.Controls)
@@ -465,42 +361,206 @@ namespace BlueberryPizzeria
         /// </summary>
         private void UpdateCart()
         {
-            cartTextBox.Clear();
-            double subtotal = 0.0;
+            // Clear existing cart display
+            cartPanel.Controls.Clear();
 
-            for (int i = 0; i < cart.Count; i++)
+            // Re-add header
+            Panel headerPanel = new Panel
             {
-                var item = cart[i];
+                Location = new Point(0, 0),
+                Size = new Size(400, 60),
+                BackColor = Color.FromArgb(31, 41, 55)
+            };
 
-                // Item number and name
-                cartTextBox.SelectionFont = new Font("Consolas", 11, FontStyle.Bold);
-                cartTextBox.AppendText($"{i + 1}. {item.Name}\n");
+            Label cartLabel = new Label
+            {
+                Text = "🛒 Current Order",
+                Font = new Font("Arial", 18, FontStyle.Bold),
+                ForeColor = Color.White,
+                Location = new Point(15, 17),
+                Size = new Size(370, 28),
+                BackColor = Color.Transparent
+            };
+            headerPanel.Controls.Add(cartLabel);
+            cartPanel.Controls.Add(headerPanel);
 
-                // Details
-                if (!string.IsNullOrEmpty(item.Details))
+            // Items container with scroll
+            Panel itemsContainer = new Panel
+            {
+                Location = new Point(0, 60),
+                Size = new Size(400, 400),
+                BackColor = Color.White,
+                AutoScroll = true
+            };
+
+            double subtotal = 0.0;
+            int yPos = 10;
+
+            if (cart.Count == 0)
+            {
+                Label emptyLabel = new Label
                 {
-                    cartTextBox.SelectionFont = new Font("Consolas", 9);
-                    cartTextBox.SelectionColor = Color.FromArgb(107, 114, 128);
-                    cartTextBox.AppendText($"   {item.Details}\n");
+                    Text = "No items in cart",
+                    Font = new Font("Arial", 12),
+                    ForeColor = Color.FromArgb(156, 163, 175),
+                    Location = new Point(0, 150),
+                    Size = new Size(400, 30),
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    BackColor = Color.Transparent
+                };
+                itemsContainer.Controls.Add(emptyLabel);
+            }
+            else
+            {
+                for (int i = 0; i < cart.Count; i++)
+                {
+                    var item = cart[i];
+                    int itemIndex = i; // Capture for lambda
+
+                    Panel itemPanel = new Panel
+                    {
+                        Location = new Point(10, yPos),
+                        Size = new Size(370, 85),
+                        BackColor = Color.FromArgb(249, 250, 251),
+                        BorderStyle = BorderStyle.FixedSingle
+                    };
+
+                    // Item name
+                    Label nameLabel = new Label
+                    {
+                        Text = $"{i + 1}. {item.Name}",
+                        Font = new Font("Arial", 11, FontStyle.Bold),
+                        Location = new Point(10, 8),
+                        Size = new Size(280, 22),
+                        BackColor = Color.Transparent
+                    };
+                    itemPanel.Controls.Add(nameLabel);
+
+                    // Details
+                    if (!string.IsNullOrEmpty(item.Details))
+                    {
+                        Label detailsLabel = new Label
+                        {
+                            Text = item.Details,
+                            Font = new Font("Arial", 9),
+                            ForeColor = Color.FromArgb(107, 114, 128),
+                            Location = new Point(10, 32),
+                            Size = new Size(280, 25),
+                            BackColor = Color.Transparent
+                        };
+                        itemPanel.Controls.Add(detailsLabel);
+                    }
+
+                    // Price
+                    Label priceLabel = new Label
+                    {
+                        Text = $"${item.Price:F2}",
+                        Font = new Font("Arial", 12, FontStyle.Bold),
+                        ForeColor = Color.FromArgb(22, 163, 74),
+                        Location = new Point(10, 57),
+                        Size = new Size(100, 22),
+                        BackColor = Color.Transparent
+                    };
+                    itemPanel.Controls.Add(priceLabel);
+
+                    // Remove button
+                    Button removeButton = new Button
+                    {
+                        Text = "✕ Remove",
+                        Font = new Font("Arial", 9, FontStyle.Bold),
+                        Location = new Point(270, 55),
+                        Size = new Size(90, 26),
+                        BackColor = Color.FromArgb(220, 38, 38),
+                        ForeColor = Color.White,
+                        FlatStyle = FlatStyle.Flat,
+                        Cursor = Cursors.Hand
+                    };
+                    removeButton.FlatAppearance.BorderSize = 0;
+                    removeButton.Click += (s, e) => {
+                        cart.RemoveAt(itemIndex);
+                        UpdateCart();
+                    };
+                    itemPanel.Controls.Add(removeButton);
+
+                    itemsContainer.Controls.Add(itemPanel);
+                    yPos += 95;
+                    subtotal += item.Price;
                 }
-
-                // Price
-                cartTextBox.SelectionFont = new Font("Consolas", 10, FontStyle.Bold);
-                cartTextBox.SelectionColor = Color.FromArgb(22, 163, 74);
-                cartTextBox.AppendText($"   ${item.Price:F2}\n\n");
-                cartTextBox.SelectionColor = Color.Black;
-
-                subtotal += item.Price;
             }
 
-            double tax = subtotal * 0.08;
-            double total = subtotal + tax;
+            cartPanel.Controls.Add(itemsContainer);
 
-            subtotalLabel.Text = $"Subtotal: ${subtotal:F2}";
-            taxLabel.Text = $"Tax (8%): ${tax:F2}";
-            totalLabel.Text = $"Total: ${total:F2}";
+            // Totals panel
+            Panel totalsPanel = new Panel
+            {
+                Location = new Point(0, 460),
+                Size = new Size(400, 140),
+                BackColor = Color.FromArgb(249, 250, 251)
+            };
 
-            checkoutButton.Enabled = cart.Count > 0;
+            Panel separatorLine = new Panel
+            {
+                Location = new Point(20, 0),
+                Size = new Size(360, 2),
+                BackColor = Color.FromArgb(229, 231, 235)
+            };
+            totalsPanel.Controls.Add(separatorLine);
+
+            subtotalLabel = new Label
+            {
+                Text = $"Subtotal: ${subtotal:F2}",
+                Font = new Font("Arial", 14),
+                Location = new Point(20, 20),
+                Size = new Size(360, 28),
+                BackColor = Color.Transparent
+            };
+
+            taxLabel = new Label
+            {
+                Text = $"Tax (8%): ${(subtotal * 0.08):F2}",
+                Font = new Font("Arial", 14),
+                Location = new Point(20, 50),
+                Size = new Size(360, 28),
+                BackColor = Color.Transparent
+            };
+
+            Panel separator2 = new Panel
+            {
+                Location = new Point(20, 80),
+                Size = new Size(360, 2),
+                BackColor = Color.FromArgb(229, 231, 235)
+            };
+            totalsPanel.Controls.Add(separator2);
+
+            totalLabel = new Label
+            {
+                Text = $"Total: ${(subtotal * 1.08):F2}",
+                Font = new Font("Arial", 22, FontStyle.Bold),
+                ForeColor = Color.FromArgb(185, 28, 28),
+                Location = new Point(20, 90),
+                Size = new Size(360, 38),
+                BackColor = Color.Transparent
+            };
+
+            totalsPanel.Controls.AddRange(new Control[] { subtotalLabel, taxLabel, totalLabel });
+            cartPanel.Controls.Add(totalsPanel);
+
+            // Checkout button
+            checkoutButton = new Button
+            {
+                Text = "Proceed to Payment",
+                Font = new Font("Arial", 16, FontStyle.Bold),
+                Location = new Point(0, 600),
+                Size = new Size(400, 60),
+                BackColor = Color.FromArgb(22, 163, 74),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Enabled = cart.Count > 0
+            };
+            checkoutButton.FlatAppearance.BorderSize = 0;
+            checkoutButton.Click += CheckoutButton_Click;
+            cartPanel.Controls.Add(checkoutButton);
         }
 
         /// <summary>
@@ -515,7 +575,7 @@ namespace BlueberryPizzeria
             }
 
             double total = cart.Sum(item => item.Price) * 1.08;
-            MessageBox.Show($"Order Total: ${total:F2}\n\nReceipt generation will be fully implemented in next phase.\n\nOrder placed successfully!",
+            MessageBox.Show($"Order Total: ${total:F2}\n\nReceipt generation will be fully implemented in next phase.\n\nOrder placed successfully!", 
                           "Checkout", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             // Clear cart

@@ -142,14 +142,20 @@ namespace BlueberryPizzeria.Models
         /// <returns>Size index (0-3)</returns>
         private int GetSizeIndex()
         {
-            return Size switch
+            switch (Size)
             {
-                "Small" => 0,
-                "Medium" => 1,
-                "Large" => 2,
-                "Extra Large" => 3,
-                _ => 1 // Default to Medium
-            };
+                case "Small":
+                    return 0;
+                case "Medium":
+                    return 1;
+                case "Large":
+                    return 2;
+                case "Extra Large":
+                    return 3;
+                default:
+                    return 1; // Default to Medium
+            }
         }
+
     }
 }

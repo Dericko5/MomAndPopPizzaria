@@ -1,84 +1,16 @@
-﻿using BlueberryPizzeria.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
-namespace BlueberryPizzeria.Models
-{
-    // Simple placeholder models so the form can compile and run
-
-    public interface IOrderItem
-    {
-        string Name { get; }
-        string Details { get; }
-        double Price { get; }
-    }
-
-    public class SimpleOrderItem : IOrderItem
-    {
-        public string Name { get; private set; }
-        public string Details { get; private set; }
-        public double Price { get; private set; }
-
-        public SimpleOrderItem(string name, double price, string details = "")
-        {
-            Name = name;
-            Price = price;
-            Details = details;
-        }
-    }
-
-    public class PizzaOrder : IOrderItem
-    {
-        public string Size { get; private set; }
-        public string Crust { get; private set; }
-        public List<string> Toppings { get; private set; }
-
-        public string Name => $"{Size} Pizza";
-
-        public string Details
-        {
-            get
-            {
-                string toppingText = (Toppings != null && Toppings.Count > 0)
-                    ? string.Join(", ", Toppings)
-                    : "None";
-
-                return $"Crust: {Crust}; Toppings: {toppingText}";
-            }
-        }
-
-        public double Price
-        {
-            get
-            {
-                // Very simple placeholder pricing logic
-                double basePrice;
-                switch (Size)
-                {
-                    case "Small": basePrice = 5.00; break;
-                    case "Large": basePrice = 9.00; break;
-                    default: basePrice = 7.00; break;  // Medium or anything else
-                }
-
-                double toppingCost = (Toppings != null ? Toppings.Count : 0) * 0.50;
-                return basePrice + toppingCost;
-            }
-        }
-
-        public PizzaOrder(string size, string crust, List<string> toppings)
-        {
-            Size = size;
-            Crust = crust;
-            Toppings = toppings ?? new List<string>();
-        }
-    }
-}
+using BlueberryPizzeria.Models;
 
 namespace BlueberryPizzeria
 {
+    /// <summary>
+    /// Main POS form for employee order entry
+    /// Provides interface for taking customer orders with full menu customization
+    /// </summary>
     public class POSForm : Form
     {
         private Panel menuPanel;
@@ -91,22 +23,31 @@ namespace BlueberryPizzeria
         private string currentCategory = "Pizza";
         private List<IOrderItem> cart = new List<IOrderItem>();
 
+        /// <summary>
+        /// Initializes a new instance of the POSForm
+        /// </summary>
         public POSForm()
         {
             InitializeComponents();
             LoadMenuItems();
         }
 
+        /// <summary>
+        /// Initializes all UI components
+        /// </summary>
         private void InitializeComponents()
         {
+            // Form properties
             this.Text = "Blueberry Pizzeria - Employee POS System";
             this.Size = new Size(1200, 800);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(243, 244, 246);
 
+            // Header Panel
             Panel headerPanel = CreateHeaderPanel();
             this.Controls.Add(headerPanel);
 
+            // Main content panel
             Panel mainPanel = new Panel
             {
                 Location = new Point(0, 80),
@@ -114,11 +55,13 @@ namespace BlueberryPizzeria
                 BackColor = Color.FromArgb(243, 244, 246)
             };
 
+            // Left side - Menu
             Panel leftPanel = CreateMenuSection();
             leftPanel.Location = new Point(0, 0);
             leftPanel.Size = new Size(800, 720);
             mainPanel.Controls.Add(leftPanel);
 
+            // Right side - Cart
             cartPanel = CreateCartSection();
             cartPanel.Location = new Point(800, 0);
             cartPanel.Size = new Size(400, 720);
@@ -127,6 +70,9 @@ namespace BlueberryPizzeria
             this.Controls.Add(mainPanel);
         }
 
+        /// <summary>
+        /// Creates the header panel with title and buttons
+        /// </summary>
         private Panel CreateHeaderPanel()
         {
             Panel panel = new Panel
@@ -136,13 +82,14 @@ namespace BlueberryPizzeria
                 BackColor = Color.FromArgb(185, 28, 28) // Red-700
             };
 
+            // Title section
             Label titleLabel = new Label
             {
-                Text = "Blueberry Pizzeria",
+                Text = "🍕 Blueberry Pizzeria",
                 Font = new Font("Arial", 24, FontStyle.Bold),
                 ForeColor = Color.White,
-                Location = new Point(20, 15),
-                Size = new Size(400, 35),
+                Location = new Point(20, 12),
+                Size = new Size(400, 38),
                 BackColor = Color.Transparent
             };
 
@@ -152,24 +99,25 @@ namespace BlueberryPizzeria
                 Font = new Font("Arial", 12),
                 ForeColor = Color.FromArgb(254, 202, 202), // Red-200
                 Location = new Point(20, 50),
-                Size = new Size(400, 20),
+                Size = new Size(400, 22),
                 BackColor = Color.Transparent
             };
 
+            // Header buttons
             Button kitchenButton = CreateHeaderButton("Kitchen View", new Point(900, 20));
             Button customerButton = CreateHeaderButton("Find Customer", new Point(1020, 20));
 
-            kitchenButton.Click += (s, e) =>
-                MessageBox.Show("Kitchen Display - To be implemented", "Info");
-
-            customerButton.Click += (s, e) =>
-                MessageBox.Show("Customer Search - To be implemented", "Info");
+            kitchenButton.Click += (s, e) => MessageBox.Show("Kitchen Display - To be implemented", "Info");
+            customerButton.Click += (s, e) => MessageBox.Show("Customer Search - To be implemented", "Info");
 
             panel.Controls.AddRange(new Control[] { titleLabel, subtitleLabel, kitchenButton, customerButton });
 
             return panel;
         }
 
+        /// <summary>
+        /// Creates a styled header button
+        /// </summary>
         private Button CreateHeaderButton(string text, Point location)
         {
             Button button = new Button
@@ -187,6 +135,9 @@ namespace BlueberryPizzeria
             return button;
         }
 
+        /// <summary>
+        /// Creates the menu section with category tabs and items
+        /// </summary>
         private Panel CreateMenuSection()
         {
             Panel panel = new Panel
@@ -194,6 +145,7 @@ namespace BlueberryPizzeria
                 BackColor = Color.FromArgb(243, 244, 246)
             };
 
+            // Category tabs
             Panel tabPanel = new Panel
             {
                 Location = new Point(0, 0),
@@ -233,6 +185,7 @@ namespace BlueberryPizzeria
                 tabPanel.Controls.Add(tabButton);
             }
 
+            // Menu items panel with scroll
             menuPanel = new Panel
             {
                 Location = new Point(10, 60),
@@ -247,6 +200,9 @@ namespace BlueberryPizzeria
             return panel;
         }
 
+        /// <summary>
+        /// Creates the cart section on the right side
+        /// </summary>
         private Panel CreateCartSection()
         {
             Panel panel = new Panel
@@ -254,6 +210,7 @@ namespace BlueberryPizzeria
                 BackColor = Color.White
             };
 
+            // Header
             Panel headerPanel = new Panel
             {
                 Location = new Point(0, 0),
@@ -266,23 +223,26 @@ namespace BlueberryPizzeria
                 Text = "🛒 Current Order",
                 Font = new Font("Arial", 18, FontStyle.Bold),
                 ForeColor = Color.White,
-                Location = new Point(15, 18),
-                Size = new Size(370, 25),
+                Location = new Point(15, 17),
+                Size = new Size(370, 28),
                 BackColor = Color.Transparent
             };
 
             headerPanel.Controls.Add(cartLabel);
 
+            // Cart items area
             cartTextBox = new RichTextBox
             {
-                Location = new Point(0, 60),
-                Size = new Size(400, 400),
-                Font = new Font("Courier New", 10),
+                Location = new Point(10, 70),
+                Size = new Size(380, 380),
+                Font = new Font("Consolas", 10),
                 ReadOnly = true,
                 BackColor = Color.White,
-                BorderStyle = BorderStyle.None
+                BorderStyle = BorderStyle.None,
+                Padding = new Padding(5)
             };
 
+            // Totals panel
             Panel totalsPanel = new Panel
             {
                 Location = new Point(0, 460),
@@ -290,33 +250,55 @@ namespace BlueberryPizzeria
                 BackColor = Color.FromArgb(249, 250, 251)
             };
 
+            // Separator line
+            Panel separatorLine = new Panel
+            {
+                Location = new Point(20, 0),
+                Size = new Size(360, 2),
+                BackColor = Color.FromArgb(229, 231, 235)
+            };
+            totalsPanel.Controls.Add(separatorLine);
+
             subtotalLabel = new Label
             {
                 Text = "Subtotal: $0.00",
                 Font = new Font("Arial", 14),
-                Location = new Point(20, 15),
-                Size = new Size(360, 25)
+                Location = new Point(20, 20),
+                Size = new Size(360, 28),
+                BackColor = Color.Transparent
             };
 
             taxLabel = new Label
             {
                 Text = "Tax (8%): $0.00",
                 Font = new Font("Arial", 14),
-                Location = new Point(20, 45),
-                Size = new Size(360, 25)
+                Location = new Point(20, 50),
+                Size = new Size(360, 28),
+                BackColor = Color.Transparent
             };
+
+            // Second separator
+            Panel separator2 = new Panel
+            {
+                Location = new Point(20, 80),
+                Size = new Size(360, 2),
+                BackColor = Color.FromArgb(229, 231, 235)
+            };
+            totalsPanel.Controls.Add(separator2);
 
             totalLabel = new Label
             {
                 Text = "Total: $0.00",
-                Font = new Font("Arial", 20, FontStyle.Bold),
+                Font = new Font("Arial", 22, FontStyle.Bold),
                 ForeColor = Color.FromArgb(185, 28, 28),
-                Location = new Point(20, 80),
-                Size = new Size(360, 35)
+                Location = new Point(20, 90),
+                Size = new Size(360, 38),
+                BackColor = Color.Transparent
             };
 
             totalsPanel.Controls.AddRange(new Control[] { subtotalLabel, taxLabel, totalLabel });
 
+            // Checkout button
             checkoutButton = new Button
             {
                 Text = "Proceed to Payment",
@@ -337,10 +319,14 @@ namespace BlueberryPizzeria
             return panel;
         }
 
+        /// <summary>
+        /// Switches between menu categories
+        /// </summary>
         private void SwitchCategory(string category)
         {
             currentCategory = category;
 
+            // Update tab button colors
             Panel tabPanel = (Panel)menuPanel.Parent.Controls[0];
             foreach (Control control in tabPanel.Controls)
             {
@@ -362,6 +348,9 @@ namespace BlueberryPizzeria
             LoadMenuItems();
         }
 
+        /// <summary>
+        /// Loads menu items based on current category
+        /// </summary>
         private void LoadMenuItems()
         {
             menuPanel.Controls.Clear();
@@ -374,61 +363,33 @@ namespace BlueberryPizzeria
 
             if (currentCategory == "Pizza")
             {
-                AddMenuItem("Build Your Pizza", "🍕", "Starting at $5.00",
-                    row, col++, itemWidth, itemHeight, spacing, true);
+                AddMenuItem("Build Your Pizza", "🍕", "Starting at $5.00", row, col++, itemWidth, itemHeight, spacing, true);
             }
             else if (currentCategory == "Sides")
             {
-                string[] sides =
-                {
-                    "Bread Sticks|🥖|$4.00",
-                    "Bread Stick Bites|🥖|$2.00",
-                    "Big Chocolate Chip Cookie|🍪|$4.00"
-                };
-
+                string[] sides = { "Bread Sticks|🥖|$4.00", "Bread Stick Bites|🥖|$2.00", "Big Chocolate Chip Cookie|🍪|$4.00" };
                 foreach (var side in sides)
                 {
                     var parts = side.Split('|');
-                    AddMenuItem(parts[0], parts[1], parts[2],
-                        row, col++, itemWidth, itemHeight, spacing, false);
-                    if (col >= cols)
-                    {
-                        col = 0;
-                        row++;
-                    }
+                    AddMenuItem(parts[0], parts[1], parts[2], row, col++, itemWidth, itemHeight, spacing, false);
+                    if (col >= cols) { col = 0; row++; }
                 }
             }
             else if (currentCategory == "Drinks")
             {
-                string[] drinks =
-                {
-                    "Pepsi", "Diet Pepsi", "Orange", "Diet Orange",
-                    "Root Beer", "Diet Root Beer", "Starry", "Lemonade"
-                };
-
+                string[] drinks = { "Pepsi", "Diet Pepsi", "Orange", "Diet Orange", "Root Beer", "Diet Root Beer", "Starry", "Lemonade" };
                 foreach (var drink in drinks)
                 {
-                    AddMenuItem(drink, "🥤", "$1.75",
-                        row, col++, itemWidth, itemHeight, spacing, false);
-                    if (col >= cols)
-                    {
-                        col = 0;
-                        row++;
-                    }
+                    AddMenuItem(drink, "🥤", "$1.75", row, col++, itemWidth, itemHeight, spacing, false);
+                    if (col >= cols) { col = 0; row++; }
                 }
             }
         }
 
-        private void AddMenuItem(
-            string name,
-            string emoji,
-            string price,
-            int row,
-            int col,
-            int width,
-            int height,
-            int spacing,
-            bool isPizza)
+        /// <summary>
+        /// Adds a menu item button to the panel
+        /// </summary>
+        private void AddMenuItem(string name, string emoji, string price, int row, int col, int width, int height, int spacing, bool isPizza)
         {
             Panel itemPanel = new Panel
             {
@@ -442,9 +403,9 @@ namespace BlueberryPizzeria
             Label emojiLabel = new Label
             {
                 Text = emoji,
-                Font = new Font("Arial", 48),
-                Location = new Point(0, 20),
-                Size = new Size(width, 70),
+                Font = new Font("Segoe UI Emoji", 52),
+                Location = new Point(0, 15),
+                Size = new Size(width, 80),
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.Transparent
             };
@@ -454,7 +415,7 @@ namespace BlueberryPizzeria
                 Text = name,
                 Font = new Font("Arial", 12, FontStyle.Bold),
                 Location = new Point(10, 100),
-                Size = new Size(width - 20, 40),
+                Size = new Size(width - 20, 45),
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.Transparent
             };
@@ -462,22 +423,18 @@ namespace BlueberryPizzeria
             Label priceLabel = new Label
             {
                 Text = price,
-                Font = new Font("Arial", 12, FontStyle.Bold),
+                Font = new Font("Arial", 13, FontStyle.Bold),
                 ForeColor = Color.FromArgb(185, 28, 28),
-                Location = new Point(10, 145),
-                Size = new Size(width - 20, 25),
+                Location = new Point(10, 150),
+                Size = new Size(width - 20, 30),
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.Transparent
             };
 
-            EventHandler clickHandler = (s, e) =>
-            {
+            EventHandler clickHandler = (s, e) => {
                 if (isPizza)
                 {
-                    MessageBox.Show(
-                        "Pizza Customizer - To be fully implemented\nAdding Medium Pizza with Cheese for demo",
-                        "Info");
-
+                    MessageBox.Show("Pizza Customizer - To be fully implemented\nAdding Medium Pizza with Cheese for demo", "Info");
                     var pizza = new PizzaOrder("Medium", "Regular", new List<string> { "Cheese" });
                     cart.Add(pizza);
                     UpdateCart();
@@ -490,13 +447,22 @@ namespace BlueberryPizzeria
                 }
             };
 
+            // Add click event to panel and all labels
             itemPanel.Click += clickHandler;
             emojiLabel.Click += clickHandler;
             nameLabel.Click += clickHandler;
             priceLabel.Click += clickHandler;
+
+            itemPanel.MouseEnter += (s, e) => itemPanel.BackColor = Color.FromArgb(249, 250, 251);
+            itemPanel.MouseLeave += (s, e) => itemPanel.BackColor = Color.White;
+
+            itemPanel.Controls.AddRange(new Control[] { emojiLabel, nameLabel, priceLabel });
             menuPanel.Controls.Add(itemPanel);
         }
 
+        /// <summary>
+        /// Updates the cart display with current items
+        /// </summary>
         private void UpdateCart()
         {
             cartTextBox.Clear();
@@ -505,39 +471,54 @@ namespace BlueberryPizzeria
             for (int i = 0; i < cart.Count; i++)
             {
                 var item = cart[i];
+
+                // Item number and name
+                cartTextBox.SelectionFont = new Font("Consolas", 11, FontStyle.Bold);
                 cartTextBox.AppendText($"{i + 1}. {item.Name}\n");
+
+                // Details
                 if (!string.IsNullOrEmpty(item.Details))
                 {
+                    cartTextBox.SelectionFont = new Font("Consolas", 9);
+                    cartTextBox.SelectionColor = Color.FromArgb(107, 114, 128);
                     cartTextBox.AppendText($"   {item.Details}\n");
                 }
+
+                // Price
+                cartTextBox.SelectionFont = new Font("Consolas", 10, FontStyle.Bold);
+                cartTextBox.SelectionColor = Color.FromArgb(22, 163, 74);
                 cartTextBox.AppendText($"   ${item.Price:F2}\n\n");
+                cartTextBox.SelectionColor = Color.Black;
+
                 subtotal += item.Price;
             }
 
-            double tax = subtotal * 0.06;
+            double tax = subtotal * 0.08;
             double total = subtotal + tax;
 
             subtotalLabel.Text = $"Subtotal: ${subtotal:F2}";
-            taxLabel.Text = $"Tax (6%): ${tax:F2}";
+            taxLabel.Text = $"Tax (8%): ${tax:F2}";
             totalLabel.Text = $"Total: ${total:F2}";
 
             checkoutButton.Enabled = cart.Count > 0;
         }
 
+        /// <summary>
+        /// Handles checkout button click
+        /// </summary>
         private void CheckoutButton_Click(object sender, EventArgs e)
         {
             if (cart.Count == 0)
             {
-                MessageBox.Show("Cart is empty!", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Cart is empty!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             double total = cart.Sum(item => item.Price) * 1.08;
-            MessageBox.Show(
-                $"Order Total: ${total:F2}\n\nReceipt generation will be fully implemented in next phase.\n\nOrder placed successfully!",
-                "Checkout", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"Order Total: ${total:F2}\n\nReceipt generation will be fully implemented in next phase.\n\nOrder placed successfully!",
+                          "Checkout", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+            // Clear cart
             cart.Clear();
             UpdateCart();
         }

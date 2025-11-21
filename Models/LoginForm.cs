@@ -174,7 +174,7 @@ namespace BlueberryPizzeria
         /// Handles the login button click event
         /// Validates credentials and opens appropriate form
         /// </summary>
-        private void LoginButton_Click(object? sender, EventArgs e)
+        private void LoginButton_Click(object sender, EventArgs e)
         {
             string username = usernameTextBox.Text.Trim();
             string password = passwordTextBox.Text;

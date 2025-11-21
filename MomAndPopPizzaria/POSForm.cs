@@ -112,7 +112,7 @@ namespace BlueberryPizzeria
                 KitchenDisplayForm kitchenForm = new KitchenDisplayForm();
                 kitchenForm.Show();
             };
-            customerButton.Click += (s, e) => MessageBox.Show("Customer Search - To be implemented", "Info");
+            customerButton.Click += (s, e) => OpenCustomerSearch();
 
             panel.Controls.AddRange(new Control[] { titleLabel, subtitleLabel, kitchenButton, customerButton });
 
@@ -280,7 +280,7 @@ namespace BlueberryPizzeria
                     "Pepsi|Pepsi.png",
                     "Diet Pepsi|Diet_Pepsi.png",
                     "Orange|Orange.png",
-                    "Diet Orange|Dlet_Orange.png",
+                    "Diet Orange|Diet_Orange.png",
                     "Root Beer|Rootbeer.png",
                     "Diet Root Beer|Diet_Rootbeer.png",
                     "Starry|Starry.png",

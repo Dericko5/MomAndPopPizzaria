@@ -5490,6 +5490,8 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420034}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5571,6 +5573,47 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7281f24b898a59c47a42185ddfd52c90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StaticValues
+--- !u!114 &519420034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b58840ed7b18b7946a8fc5a0760b83bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KioskOrder
+  CustomerName: {fileID: 1075503755}
+  OrderDetails: {fileID: 531529522}
+  total: {fileID: 1196216909}
+  subtotal: {fileID: 1699555196}
+  tax: {fileID: 1281772144}
+  FullPizzaPrefab: {fileID: 5410751380317666391, guid: 286df1210f675e441af0bb1c95be0843, type: 3}
+  HalfPizzaPrefab: {fileID: 6410275848620084021, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
+  OtherItemPrefab: {fileID: 3793737902725223904, guid: 07aa5d28c6953024ba12be2549c9fe9f, type: 3}
+  PizzaButton: {fileID: 1840957738}
+  DrinkButton: {fileID: 1940430695}
+  SidesButton: {fileID: 587807872}
+  ButtonBGS: {fileID: 804816119}
+  PizzaWindow: {fileID: 2073659026}
+  DrinkWindow: {fileID: 155462876}
+  SidesWindow: {fileID: 180180490}
+  orderSubtotal: 0
+  taxRate: 0.06
 --- !u!1 &531529520
 GameObject:
   m_ObjectHideFlags: 0
@@ -9257,7 +9300,7 @@ GameObject:
   - component: {fileID: 1075503756}
   - component: {fileID: 1075503755}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: CustomerName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12362,7 +12405,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -200.09494, y: -59.44629}
+  m_AnchoredPosition: {x: -200.09492, y: -59.44629}
   m_SizeDelta: {x: -526.721, y: -530.925}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1369959595
@@ -17757,7 +17800,6 @@ RectTransform:
   - {fileID: 531529521}
   - {fileID: 97855498}
   - {fileID: 4037775302682061010}
-  - {fileID: 355828919453853235}
   - {fileID: 8585650625359742113}
   - {fileID: 1026022057}
   - {fileID: 1583420639}
@@ -18797,11 +18839,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136071948}
   m_CullTransparentMesh: 1
---- !u!4 &355828919453853235 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-  m_PrefabInstance: {fileID: 5131478007956663277}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4037775302682061009
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18813,18 +18850,6 @@ PrefabInstance:
     - target: {fileID: 5410751380317666391, guid: 286df1210f675e441af0bb1c95be0843, type: 3}
       propertyPath: m_Name
       value: FullPizzaOrder
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751380317666391, guid: 286df1210f675e441af0bb1c95be0843, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6969024004711288176, guid: 286df1210f675e441af0bb1c95be0843, type: 3}
-      propertyPath: m_text
-      value: "1x Large Pizza\t-       $9.00"
-      objectReference: {fileID: 0}
-    - target: {fileID: 6969024004711288176, guid: 286df1210f675e441af0bb1c95be0843, type: 3}
-      propertyPath: m_margin.z
-      value: -62.609833
       objectReference: {fileID: 0}
     - target: {fileID: 7647184787895872981, guid: 286df1210f675e441af0bb1c95be0843, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18876,67 +18901,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7647184787895872981, guid: 286df1210f675e441af0bb1c95be0843, type: 3}
   m_PrefabInstance: {fileID: 4037775302682061009}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &5131478007956663277
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1987147081}
-    m_Modifications:
-    - target: {fileID: 6410275848620084021, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_Name
-      value: HalfPizzaOrder
-      objectReference: {fileID: 0}
-    - target: {fileID: 6410275848620084021, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -81.09627
-      objectReference: {fileID: 0}
-    - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 12.409987
-      objectReference: {fileID: 0}
-    - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -337.12497
-      objectReference: {fileID: 0}
-    - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
 --- !u!1001 &7099950813285877712
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18945,14 +18909,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1987147081}
     m_Modifications:
-    - target: {fileID: 152569689378062148, guid: 07aa5d28c6953024ba12be2549c9fe9f, type: 3}
-      propertyPath: m_text
-      value: 1x M. Pepsi       -            $1.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 152569689378062148, guid: 07aa5d28c6953024ba12be2549c9fe9f, type: 3}
-      propertyPath: m_margin.z
-      value: -63.684402
-      objectReference: {fileID: 0}
     - target: {fileID: 2037958691673658623, guid: 07aa5d28c6953024ba12be2549c9fe9f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -130.94449
@@ -18997,10 +18953,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: OtherItemOrder
       objectReference: {fileID: 0}
-    - target: {fileID: 3793737902725223904, guid: 07aa5d28c6953024ba12be2549c9fe9f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19014,25 +18966,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1987147081}
     m_Modifications:
-    - target: {fileID: 3113248458071117431, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_text
-      value: Cheese, Pepperoni
-      objectReference: {fileID: 0}
     - target: {fileID: 6410275848620084021, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
       propertyPath: m_Name
       value: HalfPizzaOrder Variant
-      objectReference: {fileID: 0}
-    - target: {fileID: 6410275848620084021, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8310817199970417170, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_text
-      value: 1x Large Pizza       -       $9.00
-      objectReference: {fileID: 0}
-    - target: {fileID: 8310817199970417170, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
-      propertyPath: m_margin.z
-      value: -51.864212
       objectReference: {fileID: 0}
     - target: {fileID: 8773931614213249719, guid: 0ae3054f8107d1842a27be8e56433ec3, type: 3}
       propertyPath: m_LocalPosition.x

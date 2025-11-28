@@ -30,13 +30,13 @@ public class KioskLoginUi : MonoBehaviour
         isGuest = true;
     }
 
-    public void ToSignUp()
+    public static void ToSignUp()
     {
         StaticValues.User = ""; // clear static values and load signup scene
         StaticValues.Pass = "";
         SceneManager.LoadSceneAsync("KioskSignup");
     }
-    public void ToLogin()
+    public static void ToLogin()
     {
         SceneManager.LoadSceneAsync("Kiosk");
     }
@@ -59,7 +59,7 @@ public class KioskLoginUi : MonoBehaviour
         LoginUi.SetActive(false);
         DeliveryUi.SetActive(true);
     }
-    public void ToOrder()
+    public static void ToOrder()
     {
         SceneManager.LoadSceneAsync("KioskOrder"); //Loads order scene
     }
@@ -73,7 +73,7 @@ public class KioskLoginUi : MonoBehaviour
         StaticValues.Delivery = false;
     }
 
-    public void Signout()
+    public static void Signout()
     {
         StaticValues.User = ""; //Reset static values and reload login scene
         StaticValues.Pass = "";

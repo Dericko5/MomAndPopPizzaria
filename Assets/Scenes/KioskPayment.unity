@@ -3804,6 +3804,7 @@ RectTransform:
   - {fileID: 2080742710}
   - {fileID: 1786795288}
   - {fileID: 245209597}
+  - {fileID: 967241075}
   - {fileID: 486924687}
   - {fileID: 737062406}
   - {fileID: 1281772143}
@@ -3819,7 +3820,6 @@ RectTransform:
   - {fileID: 340807821}
   - {fileID: 859619864}
   - {fileID: 1659775128}
-  - {fileID: 967241075}
   - {fileID: 593164700}
   - {fileID: 495526821}
   - {fileID: 1090682111}

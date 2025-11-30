@@ -105,7 +105,7 @@ public class KioskOrder : MonoBehaviour
         tax.text = "Tax(6%):\t       \t    $0.00";
         subtotal.text = "Subtotal:\t     \t    $0.00";
         total.text = "Total:		         $0.00";
-        Debug.Log("Total length = " + total.text.Length);
+        
         
 
 

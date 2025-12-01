@@ -20,8 +20,8 @@ public class KioskLoginUi : MonoBehaviour
         LoginUi.SetActive(true);
         DeliveryUi.SetActive(false);
 
-        StaticValues.User = ""; // clear static values
-        StaticValues.Pass = "";
+        //StaticValues.User = ""; clear static values
+        //StaticValues.Pass = "";
 
         isGuest = false; //reset guest status on start
     }

@@ -82,26 +82,28 @@ public class KioskLoginUi : MonoBehaviour
 
 
     }
-    public void SetLoginValues()
-    {
-        //UNTIL LOGIN() IS DONE, SETTING USER AS CUSTOMER NAME
-        if (!isGuest)
-        {
-            StaticValues.CustomerName = username.text;
-            StaticValues.Pass = password.text;
-            StaticValues.User = username.text;
-        }
-    }
+    /* public void SetLoginValues()
+ {
+     //UNTIL LOGIN() IS DONE, SETTING USER AS CUSTOMER NAME
+     if (!isGuest)
+     {
+         StaticValues.CustomerName = username.text;
+         StaticValues.Pass = password.text;
+         StaticValues.User = username.text;
+     }
+ }*/
 
-    // this one may be up to you guys to do!
-    public void Login()
-    {
-        //login validation code here
+ // this one may be up to you guys to do!
+ public void Login()
+ {
+     //login validation code here
+     if (StaticValues.User == username.text && StaticValues.Pass == password.text) {
+         Greeting.text = "Ciao, " + StaticValues.CustomerName + "!"; //set greeting text
+      
+         ToDelivery(); //proceed to delivery/takeout selection
+     }
+     
 
 
-
-        Greeting.text = "Ciao, " + StaticValues.CustomerName + "!"; //set greeting text
-        ToDelivery(); //proceed to delivery/takeout selection
-
-    }
+ }
 }

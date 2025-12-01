@@ -44,6 +44,7 @@ public class KioskSignup : MonoBehaviour
                 //Sets client's username and password to what was entered in the boxes and sends client back to the login screen if all checks succeed
                 StaticValues.User = emailphone.text;
                 StaticValues.Pass = password.text;
+                StaticValues.CustomerName = emailphone.text;
                 ToLogin();
             }
         } 

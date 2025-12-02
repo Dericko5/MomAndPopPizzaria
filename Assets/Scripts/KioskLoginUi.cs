@@ -28,6 +28,9 @@ public class KioskLoginUi : MonoBehaviour
     public void SetGuestTrue()
     {
         isGuest = true;
+        StaticValues.User = ""; // clear static values 
+        StaticValues.Pass = "";
+        StaticValues.CustomerName = "Guest User";
     }
 
     public static void ToSignUp()
@@ -82,18 +85,17 @@ public class KioskLoginUi : MonoBehaviour
 
 
     }
-    /* public void SetLoginValues()
+    public void SetLoginValues()
  {
-     //UNTIL LOGIN() IS DONE, SETTING USER AS CUSTOMER NAME
+     
      if (!isGuest)
      {
          StaticValues.CustomerName = username.text;
          StaticValues.Pass = password.text;
          StaticValues.User = username.text;
      }
- }*/
+ }
 
- // this one may be up to you guys to do!
  public void Login()
  {
      //login validation code here

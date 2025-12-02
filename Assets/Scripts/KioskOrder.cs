@@ -34,7 +34,6 @@ public class KioskOrder : MonoBehaviour
     
     public Vector3 Itemposition = new Vector3(-29, 1, -67.5f);
     decimal itemPrice = 0;
-    string itemName = "";
     public static int itemQuantity = 1;
     public int itemOrderType = 0; //1=full pizza, 2=half pizza, 3=other item
     public int lastOrderType = 0;
@@ -147,7 +146,7 @@ public class KioskOrder : MonoBehaviour
     }
     public void HideMenuPopup()
     {
-        PizzaButton.SetActive(true);
+        PizzaButton.SetActive(true); //Deactivates windows and reenables the buttons and ui elements
         DrinkButton.SetActive(true);
         SidesButton.SetActive(true);
         ButtonBGS.SetActive(true);
@@ -156,10 +155,10 @@ public class KioskOrder : MonoBehaviour
         PizzaWindow.SetActive(false);
     }
 
-    public void SetItemQuantity(TMP_InputField quantityField)
+    public void SetItemQuantity(TMP_InputField quantityField) //Specifically for setting quantity of pizzas
     {
         int quantity;
-        if (int.TryParse(quantityField.text, out quantity))
+        if (int.TryParse(quantityField.text, out quantity)) // take in value from input field, and set value = to what it outputs, or 1
         {
             itemQuantity = quantity;
             
@@ -171,13 +170,13 @@ public class KioskOrder : MonoBehaviour
         }
     }
 
-    public void SetDrinkSize(TMP_Dropdown dDropdown)
+    public void SetDrinkSize(TMP_Dropdown dDropdown) //sets drink size
     {
         DrinkSize = dDropdown.options[dDropdown.value].text;
         DrinkSize = DrinkSize[0] + ".";
         itemPrice = 1.75m;
     }
-    public void SetItemSize(TMP_Dropdown sizeDropdown)
+    public void SetItemSize(TMP_Dropdown sizeDropdown) //sets sizes for pizzas and sets the variable itemPrice equal to what it returns from the dictionary
     {
         
         itemSize = sizeDropdown.options[sizeDropdown.value].text;
@@ -193,7 +192,7 @@ public class KioskOrder : MonoBehaviour
         
     }
 
-    public void SetPizzaCrust(TMP_Dropdown crustDropdown)
+    public void SetPizzaCrust(TMP_Dropdown crustDropdown) //based on value of the crust dropdown, sets crust type (Pan, thin, regular)
     {
         PizzaCrust = crustDropdown.options[crustDropdown.value].text;
     }
@@ -204,15 +203,15 @@ public class KioskOrder : MonoBehaviour
     }
     public void SetDrink(TMP_Dropdown drinks)
     {
-        DrinkName = drinks.options[drinks.value].text;
+        DrinkName = drinks.options[drinks.value].text; //based on value of the drink dropdown, sets soda type/flavor
     }
 
     public void SetSide(TMP_Dropdown sides)
     {
-        SideName = sides.options[sides.value].text;
+        SideName = sides.options[sides.value].text; //based on value of the sides dropdown, sets side type
     }
 
-    public void AddFullPizzaOrder()
+    public void AddFullPizzaOrder() // Adds a pizza to the order with uniform toppings (and uses a specific prefab)
     {
 
         itemPrice = (decimal)(sizePrices[itemSize]);
@@ -245,9 +244,9 @@ public class KioskOrder : MonoBehaviour
 
 
 
-        GameObject FullPizza = Instantiate(FullPizzaPrefab, Itemposition, Quaternion.identity);
+        GameObject FullPizza = Instantiate(FullPizzaPrefab, Itemposition, Quaternion.identity); 
         FullPizza.transform.SetParent(OrderItems.transform, true);
-        FullPizza.transform.localScale = new Vector3(0.8428124f, 0.8428124f, 0.8428124f);
+        FullPizza.transform.localScale = new Vector3(0.8428124f, 0.8428124f, 0.8428124f); // create new instance of prefab, format, and group with other order items to be toggled later
 
         for (int i = 0; i < itemQuantity -1; i++) //calculate total price based on quantity
         {
@@ -304,8 +303,8 @@ public class KioskOrder : MonoBehaviour
         orderSubtotal += itemPrice;
         
         decimal taxAmount = orderSubtotal * taxRate;
-        
-        orderTotal += itemPrice + taxAmount;
+
+        orderTotal = orderSubtotal + taxAmount;
 
 
         //calculating spaces for formatting
@@ -355,6 +354,7 @@ public class KioskOrder : MonoBehaviour
 
     public void AddHalfPizzaOrder()
     {
+        // Adds a pizza to the order with toppings that can be different on each half (and uses a specific prefab)
         itemPrice = (decimal)(sizePrices[itemSize]);
         switch (lastOrderType)
         {
@@ -383,7 +383,7 @@ public class KioskOrder : MonoBehaviour
 
         GameObject HalfPizza = Instantiate(HalfPizzaPrefab, Itemposition, Quaternion.identity);
         HalfPizza.transform.SetParent(OrderItems.transform, true);
-        HalfPizza.transform.localScale = new Vector3(0.8428124f, 0.8428124f, 0.8428124f);
+        HalfPizza.transform.localScale = new Vector3(0.8428124f, 0.8428124f, 0.8428124f); //formats new instance of prefab
 
         for (int i = 0; i < itemQuantity - 1; i++) //calculate total price based on quantity
         {
@@ -456,7 +456,7 @@ public class KioskOrder : MonoBehaviour
 
         decimal taxAmount = orderSubtotal * taxRate;
 
-        orderTotal += itemPrice + taxAmount;
+        orderTotal = orderSubtotal + taxAmount;
 
 
         //calculating spaces for formatting
@@ -507,7 +507,8 @@ public class KioskOrder : MonoBehaviour
 
     public void AddDrinkOrder()
     {
-        itemPrice = 1.75m;
+        //adds a drink item to the order using the other item prefab
+        itemPrice = 1.75m; //all drinks are 1.75
         switch (lastOrderType)
         {
             case 0:
@@ -545,7 +546,7 @@ public class KioskOrder : MonoBehaviour
 
         decimal taxAmount = orderSubtotal * taxRate;
 
-        orderTotal += itemPrice + taxAmount;
+        orderTotal = orderSubtotal + taxAmount;
 
 
         //calculating spaces for formatting
@@ -586,6 +587,7 @@ public class KioskOrder : MonoBehaviour
 
     public void AddSideOrder()
     {
+        //adds a drink item to the order using the other item prefab
         itemPrice = 4.00m;
         if (SideName.Equals("Breadsticks ($4.00)")) { itemPrice = 4.00m; SideName = "Breadsticks"; }
         if (SideName.Equals("Breadstick Bites ($2.00)")) { itemPrice = 2.00m; SideName = "BrdStick Bites"; }
@@ -608,7 +610,6 @@ public class KioskOrder : MonoBehaviour
         GameObject Side = Instantiate(OtherItemPrefab, Itemposition, Quaternion.identity);
         Side.transform.SetParent(OrderItems.transform, true);
         Side.transform.localScale = new Vector3(0.8428124f, 0.8428124f, 0.8428124f);
-        lastOrderType = 3; //other item
 
         for (int i = 0; i < itemQuantity - 1; i++) //calculate total price based on quantity
         {
@@ -627,7 +628,7 @@ public class KioskOrder : MonoBehaviour
 
         decimal taxAmount = orderSubtotal * taxRate;
 
-        orderTotal += itemPrice + taxAmount;
+        orderTotal = orderSubtotal + taxAmount;
 
 
         //calculating spaces for formatting
@@ -696,14 +697,14 @@ public class KioskOrder : MonoBehaviour
 
     }
 
-    public void ToCancel()
+    public void ToCancel() //opens a window asking user to confirm if they want to cancel the order
     {
         MenuPopup();
         OrderItems.SetActive(false);
         CancelWindow.SetActive(true);
 
     }
-    public void returnToOrder()
+    public void returnToOrder() //returns to order if user does not confirm their cancellation
     {
         CancelWindow.SetActive(false);
         HideMenuPopup();

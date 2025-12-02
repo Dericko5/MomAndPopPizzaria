@@ -1638,7 +1638,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KioskSignup
   emailphone: {fileID: 444828125}
   emailphoneConfirm: {fileID: 1005926595}
-  invalidatorText: {fileID: 0}
+  invalidatorText: {fileID: 1538622972}
   password: {fileID: 1839139999}
   passwordConfirm: {fileID: 1328336227}
 --- !u!114 &519420035
@@ -4597,7 +4597,7 @@ GameObject:
   - component: {fileID: 1538622973}
   - component: {fileID: 1538622972}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Invalidating Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4642,7 +4642,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '! My name Jeff'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5255,7 +5255,7 @@ GameObject:
   - component: {fileID: 1660399049}
   - component: {fileID: 1660399050}
   m_Layer: 0
-  m_Name: Red Lines (1)
+  m_Name: Red Lines
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5345,7 +5345,7 @@ GameObject:
   - component: {fileID: 1674702301}
   - component: {fileID: 1674702302}
   m_Layer: 0
-  m_Name: TopKiosk0 (1)
+  m_Name: TopKiosk0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

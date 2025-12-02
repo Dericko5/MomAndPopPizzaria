@@ -247,6 +247,7 @@ public class KioskOrder : MonoBehaviour
         GameObject FullPizza = Instantiate(FullPizzaPrefab, Itemposition, Quaternion.identity); 
         FullPizza.transform.SetParent(OrderItems.transform, true);
         FullPizza.transform.localScale = new Vector3(0.8428124f, 0.8428124f, 0.8428124f); // create new instance of prefab, format, and group with other order items to be toggled later
+        FullPizza.transform.localPosition = Itemposition;
 
         for (int i = 0; i < itemQuantity -1; i++) //calculate total price based on quantity
         {
@@ -384,6 +385,7 @@ public class KioskOrder : MonoBehaviour
         GameObject HalfPizza = Instantiate(HalfPizzaPrefab, Itemposition, Quaternion.identity);
         HalfPizza.transform.SetParent(OrderItems.transform, true);
         HalfPizza.transform.localScale = new Vector3(0.8428124f, 0.8428124f, 0.8428124f); //formats new instance of prefab
+        HalfPizza.transform.localPosition = Itemposition;
 
         for (int i = 0; i < itemQuantity - 1; i++) //calculate total price based on quantity
         {
@@ -528,6 +530,7 @@ public class KioskOrder : MonoBehaviour
         GameObject Drink = Instantiate(OtherItemPrefab, Itemposition, Quaternion.identity);
         Drink.transform.SetParent(OrderItems.transform, true);
         Drink.transform.localScale = new Vector3(0.8428124f, 0.8428124f, 0.8428124f);
+        Drink.transform.localPosition = Itemposition;
 
         for (int i = 0; i < itemQuantity - 1; i++) //calculate total price based on quantity
         {
@@ -610,6 +613,7 @@ public class KioskOrder : MonoBehaviour
         GameObject Side = Instantiate(OtherItemPrefab, Itemposition, Quaternion.identity);
         Side.transform.SetParent(OrderItems.transform, true);
         Side.transform.localScale = new Vector3(0.8428124f, 0.8428124f, 0.8428124f);
+        Side.transform.localPosition = Itemposition;
 
         for (int i = 0; i < itemQuantity - 1; i++) //calculate total price based on quantity
         {

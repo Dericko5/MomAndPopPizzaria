@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/KioskOrder.unity
     guid: 5a27f46924f853d4ea92d82314819ce0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/KioskPayment.unity
     guid: 6b74a8a694a0b5649b816354540524a2
   - enabled: 1
